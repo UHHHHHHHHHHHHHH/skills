@@ -13,6 +13,16 @@ Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all op
 
 Infer the repo from `git remote -v` — `gh` does this automatically when run inside a clone.
 
+## Pull requests
+
+- **Find the PR for a branch**: `gh pr list --head <branch>` or `gh pr view <number>`.
+- **View metadata + description**: `gh pr view <number> --comments`.
+- **Full diff**: `gh pr diff <number>`.
+- **List existing review comments/threads**: `gh api repos/{owner}/{repo}/pulls/<number>/comments`.
+- **Post a general PR comment**: `gh pr comment <number> --body "..."`. Use a heredoc for multi-line bodies.
+- **Post a comment anchored to a specific file/line**: not supported by `gh pr comment`; use `gh api repos/{owner}/{repo}/pulls/<number>/comments` with `path`, `line`, `commit_id` (get the head commit SHA from `gh pr view <number> --json headRefOid`). Prefer a general comment referencing `file.py:123` in the text unless line-anchoring is specifically required — far less brittle.
+- **Approve / request changes**: `gh pr review <number> --approve` / `--request-changes --body "..."` / `--comment --body "..."`.
+
 ## When a skill says "publish to the issue tracker"
 
 Create a GitHub issue.
