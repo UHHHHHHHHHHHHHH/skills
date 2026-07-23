@@ -23,11 +23,21 @@ fi
 
 mkdir -p "$DEST"
 
-find "$REPO/skills" -name SKILL.md -not -path '*/node_modules/*' -not -path '*/deprecated/*' -print0 |
+# My customization: skills in the repo that should NOT be linked.
+# Buckets in-progress/ and deprecated/ are skipped wholesale below.
+SKIP="migrate-to-shoehorn setup-pre-commit scaffold-exercises edit-article
+obsidian-vault git-guardrails-claude-code to-prd"
+
+find "$REPO/skills" -name SKILL.md -not -path '*/node_modules/*' \
+  -not -path '*/deprecated/*' -not -path '*/in-progress/*' -print0 |
 while IFS= read -r -d '' skill_md; do
   src="$(dirname "$skill_md")"
   name="$(basename "$src")"
   target="$DEST/$name"
+
+  case " $(echo $SKIP) " in
+    *" $name "*) continue ;;
+  esac
 
   if [ -e "$target" ] && [ ! -L "$target" ]; then
     rm -rf "$target"
