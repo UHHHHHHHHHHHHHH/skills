@@ -142,6 +142,15 @@ Software engineering fundamentals matter more than ever. These skills are my bes
 
 ## Reference
 
+### My Own Skills
+
+Skills I wrote from scratch, in [their own bucket](./skills/UHHHHHHHHHHHHHH/README.md) so they never collide with Matt's.
+
+- **[start-ticket](./skills/UHHHHHHHHHHHHHH/start-ticket/SKILL.md)** — Start work on a GitLab ticket: create the branch and bookmark the (ticket, session, dir, branch) mapping so `claude-resume` can jump back into this exact chat later.
+- **[to-mr](./skills/UHHHHHHHHHHHHHH/to-mr/SKILL.md)** — Open an MR/PR for the current branch, linked to its ticket with a non-closing reference so the tracker surfaces the branch without auto-closing the issue on merge.
+- **[review-mr](./skills/UHHHHHHHHHHHHHH/review-mr/SKILL.md)** — Review an open PR/MR by verifying claims against real code and live state instead of trusting the diff, separating real blockers from nitpicks, and confirming previously raised concerns actually got fixed.
+- **[sanity-check](./skills/UHHHHHHHHHHHHHH/sanity-check/SKILL.md)** — Force a critical re-examination of recent assumptions, claims, and code that "should work".
+
 ### Engineering
 
 Skills I use daily for code work.
