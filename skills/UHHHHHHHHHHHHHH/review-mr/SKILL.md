@@ -1,11 +1,31 @@
 ---
 name: review-mr
-description: Review an open pull/merge request with verify-before-trusting rigor — check claims against actual code and live state instead of trusting the diff's own docstrings and comments, separate real blockers from nitpicks with explicit reasoning, and confirm previously raised concerns actually got fixed rather than just touched. Use when the user wants to review a PR/MR, asks whether a fix actually solves the problem (vs. a symptom), or wants review feedback drafted and posted as PR/MR comments.
+description: Blunt one-shot review of an open pull/merge request: verify claims against real code and live state instead of trusting the diff's own docstrings, then report the load-bearing problem. Only user-facing and security/GDPR issues count. Use when the user explicitly wants findings handed to them without a walkthrough, or asks whether a fix solves the real problem rather than a symptom. For a normal review, use grill-mr instead, which walks them through it.
 ---
 
 # Review MR
 
 A review pass that trusts nothing it hasn't checked. The diff describes what changed; it does not prove the change is correct, complete, or placed in the right spot. This skill's job is closing that gap before anything gets approved.
+
+This is the blunt version, for when the user wants findings without a conversation. `grill-mr` is the default: it walks them through the MR part by part so the understanding is theirs. Prefer that unless they asked for this one. Say once, at the start, what this mode costs them: they get a conclusion they weren't part of forming, and they'll have to judge it without having read the code.
+
+## What counts as a problem
+
+One question decides it: **would a user hit this, or is it a security, GDPR, or compliance problem?** Everything else is cleanup that can happen whenever.
+
+Do not carry a list of things to look for. A named list of smells becomes a list of things you go find, and makes you blind to whatever isn't on it. Report what the change actually does wrong, not what it resembles.
+
+Code quality findings are rare and reject-only. Three gates, all of which must pass:
+
+1. **Can you name the concrete failure?** Not "fragile", but "when a second caller does X this returns the wrong date". If the sentence won't finish, it's taste. Drop it.
+2. **Is it mechanically enforceable?** If a linter or import-boundary rule could catch it, the finding is "we're missing a rule". Suggest the rule as a ticket and drop it from the review.
+3. **Does the cost of fixing it grow if this ships?** A migration, a data model, a public shape: worth a mention. Internal organisation is as cheap to fix next month. Drop it.
+
+Zero quality findings is the normal outcome. One that survives is a trailing sentence on the finding it shares a cause with, or a follow-up ticket. Never its own thread, never an item in a numbered list of concerns.
+
+## Evidence: prefer the product over the source
+
+The strongest evidence is the running feature contradicting itself. It can't be argued with, it's already in the assignee's language, and it can be reproduced in front of them later. A screenshot beats a file reference. If the change touches a user-visible surface, exercise it using the scenario from the ticket before reading the diff for causes. The code-level root cause is what you attach to explain the observation, not the finding itself.
 
 ## Hard dependency
 
@@ -29,17 +49,12 @@ Posting comments needs the tracker's exact CLI shape (`gh`/`glab`, how to view a
    - If this is a fix for a previously-reported bug, does the new code actually address the reported symptom, or a related-but-different one? Re-derive it, don't infer from "the diff changed something in the right file."
    - If this closes a thread from an earlier review round, diff the current state specifically against what that comment asked for — confirm it, don't assume an update means it's resolved.
 
-4. **Classify every finding.** Blocker or not — and say why in one sentence per finding, not a vague feeling:
-   - **Blocker**: a claim in the code is actively false (misleading docstring/comment), a path is unreachable/dead by construction, a failure mode is unhandled, or the fix doesn't address the actual reported problem.
-   - **Not a blocker**: style, redundant-but-harmless, could be cleaner. Say so if asked, but don't pad the review with it unprompted.
-   - **Architecture violation, but shippable now**: the change works and fixes the immediate issue, but violates a documented project convention (rule of three, layering, module boundaries, etc.) in a way that's out of scope to fix in this MR. This is "approve on condition" territory, see step 6.
+4. **Classify each finding** against the question above, and say why in one sentence. A blocker is user-facing or a security/GDPR problem. Something real but out of scope (works, fixes the immediate issue, but violates a documented convention this MR shouldn't grow to fix) is "approve on condition" territory, see step 6. Everything else was already dropped by the gates.
 
-5. **Draft, don't post yet.** One overview comment: ticket context (priority/intent), a short numbered list of what's blocking and why, and a pointer to the detail comments. Then one separate comment per blocker/topic, so each can be discussed and resolved independently instead of buried in a wall of text. Use [TEMPLATES.md](TEMPLATES.md) for the exact shape. Keep it addressed to whoever wrote the code — assume good faith, state evidence, skip the lecture.
+5. **Report, don't draft.** Lead with the single most load-bearing finding, stated in one sentence with its evidence. Not a numbered pile: a numbered list makes the reader sort signal from noise, which is the work this skill was supposed to do for them. If there are others, say how many and what they are in one line each, under the first. Say plainly what you checked and what you didn't. Then stop and let the user decide what to do with it.
 
-6. **Architecture violations get a condition, not a block.** If a finding is real but out of scope for this MR (wrong priority ticket to fix it in, small isolated fix that shouldn't grow), don't hold the MR hostage to it. Instead: draft a follow-up ticket capturing the violation and the suggested fix, get the user's go-ahead, file it, then reference its number in the review comment ("merging as-is on the condition that X is tracked in #NNN").
+   Draft comments only if they ask. Shape: the observation in domain language, what the user ends up seeing, and the evidence attached. Short. No prefix labels, no `Fix:` section, no scaffolding — write it the way a colleague would type it. One comment per problem so each can be discussed on its own, addressed to whoever wrote the code: good faith, evidence, no lecture. Show one and wait before writing the next.
 
-7. **Show the full draft to the user before posting anything.** Never post to a shared MR/PR autonomously. Once approved, post via the tracker's PR/MR comment command, overview first, then each detail comment in the order listed in the overview.
+6. **Architecture violations get a condition, not a block.** If a finding is real but out of scope for this MR (wrong priority ticket to fix it in, small isolated fix that shouldn't grow), don't hold the MR hostage to it. Instead: draft a follow-up ticket capturing the violation and the suggested fix, get the user's go-ahead, file it, then reference its number in the review comment. Cite the convention being broken and name how many times the exception has now been made — the rule of three matters, and "third time we've done this" is a different argument than "this is untidy". Then say plainly that it's merging as-is because the risk of leaving the issue unfixed outweighs the cleanliness cost, on the condition that the proper fix lands as a followup, tracked in #NNN.
 
-## Reference
-
-- [TEMPLATES.md](TEMPLATES.md) — the overview / blocker / minor / suggested-approach comment shapes.
+7. **Show every draft to the user before posting anything.** Never post to a shared MR/PR autonomously. Once approved, post via the tracker's PR/MR comment command.

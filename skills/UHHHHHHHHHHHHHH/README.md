@@ -24,8 +24,10 @@ don't collide with his at all.
 
 - [start-ticket](start-ticket/SKILL.md): start work on a GitLab ticket, create
   the branch, bookmark the session for claude-resume
-- [review-mr](review-mr/SKILL.md): review an open MR with verify-before-trusting
-  rigor
+- [grill-mr](grill-mr/SKILL.md): walk through an open MR part by part, questions
+  first, so the understanding ends up being mine
+- [review-mr](review-mr/SKILL.md): the blunt sibling of `grill-mr`, for findings
+  without the walk
 - [sanity-check](sanity-check/SKILL.md): force a critical re-examination of
   recent assumptions, claims, and "should work" code
 - [to-mr](to-mr/SKILL.md): open an MR/PR for the current branch, linked to its

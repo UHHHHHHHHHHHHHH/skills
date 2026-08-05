@@ -148,7 +148,8 @@ Skills I wrote from scratch, in [their own bucket](./skills/UHHHHHHHHHHHHHH/READ
 
 - **[start-ticket](./skills/UHHHHHHHHHHHHHH/start-ticket/SKILL.md)** — Start work on a GitLab ticket: create the branch and bookmark the (ticket, session, dir, branch) mapping so `claude-resume` can jump back into this exact chat later.
 - **[to-mr](./skills/UHHHHHHHHHHHHHH/to-mr/SKILL.md)** — Open an MR/PR for the current branch, linked to its ticket with a non-closing reference so the tracker surfaces the branch without auto-closing the issue on merge.
-- **[review-mr](./skills/UHHHHHHHHHHHHHH/review-mr/SKILL.md)** — Review an open PR/MR by verifying claims against real code and live state instead of trusting the diff, separating real blockers from nitpicks, and confirming previously raised concerns actually got fixed.
+- **[grill-mr](./skills/UHHHHHHHHHHHHHH/grill-mr/SKILL.md)** — Walk through an open MR one part at a time so the understanding is yours: it points at the code and names the question that settles each part, without handing over the conclusion.
+- **[review-mr](./skills/UHHHHHHHHHHHHHH/review-mr/SKILL.md)** — The blunt sibling of `grill-mr`: verifies claims against real code and live state, then reports the load-bearing problem instead of a pile of findings.
 - **[sanity-check](./skills/UHHHHHHHHHHHHHH/sanity-check/SKILL.md)** — Force a critical re-examination of recent assumptions, claims, and code that "should work".
 
 ### Engineering
